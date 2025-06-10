@@ -18,6 +18,8 @@ namespace HouseBroker.Domain.Models
         {
         }
 
+        public DbSet<PropertyImage> PropertyImage { get; set; }
+        public DbSet<PropertyListing> PropertyListing { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
