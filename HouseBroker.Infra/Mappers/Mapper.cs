@@ -28,8 +28,7 @@ namespace HouseBroker.Infra.Mappers
                 Features = entity.Features,
                 BrokerId = entity.BrokerId,
                 CreatedAt = entity.CreatedAt,
-                IsActive = entity.IsActive,
-                //ImageUrl = entity.Images?.ToList() ?? new List<PropertyImage>()
+                IsActive = entity.IsActive
             };
         }
 
@@ -40,7 +39,7 @@ namespace HouseBroker.Infra.Mappers
 
             return new PropertyListing
             {
-                Id = dto.Id ?? Guid.NewGuid(),
+                Id =  Guid.NewGuid(),
                 Title = dto.Title,
                 PropertyType = dto.PropertyType,
                 Location = dto.Location,
@@ -50,7 +49,6 @@ namespace HouseBroker.Infra.Mappers
                 BrokerId = dto.BrokerId,
                 CreatedAt = dto.CreatedAt == default ? DateTime.UtcNow : dto.CreatedAt,
                 IsActive = dto.IsActive,
-                //Images = dto.ImageUrl?.ToList() ?? new List<PropertyImage>()
             };
         }
 

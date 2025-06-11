@@ -13,13 +13,15 @@ namespace HouseBroker.Infra.Interface
     {
         public Task<TEntity> GetById(object id);
         Task<TEntity> GetById(params object[] id);
+
+        //incorrect definition SA
+        //Task<TEntity> GetByIdInclude(object id, params string[] includes);
         Task<IEnumerable<TEntity>> SelectWhere(params Expression<Func<TEntity, bool>>[] predictes);
         Task<IEnumerable<TEntity>> SelectWhereInclude(string[] includes, params Expression<Func<TEntity, bool>>[] predictes);
         public Task<IEnumerable<TEntity>> GetAll();
-
-        public Task<IEnumerable<TEntity>> GetAllQuearyable();
         Task<IEnumerable<TEntity>> GetAllInclude(params string[] includes);
         public IQueryable<TEntity> SelectWhereQuery(params Expression<Func<TEntity, bool>>[] predictes);
+        public IQueryable<TEntity> SelectWhereIncludeQuery(string[] includes, params Expression<Func<TEntity, bool>>[] predictes);
         ValueTask<EntityEntry<TEntity>> Insert(TEntity entity);
         void Update(TEntity entityToUpdate);
         void Delete(object id);

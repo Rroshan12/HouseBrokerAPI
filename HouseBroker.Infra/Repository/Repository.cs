@@ -96,15 +96,7 @@ namespace HouseBroker.Infra.Repository
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-
             return await dbSet.ToListAsync();
-        }
-
-        public async Task<IEnumerable<TEntity>> GetAllQuearyable()
-        {
-            IQueryable<TEntity> query = dbSet;
-
-            return await query.ToListAsync();
         }
 
 
@@ -129,6 +121,7 @@ namespace HouseBroker.Infra.Repository
             return await dbSet.FindAsync(id);
         }
 
+        // Incorrect SA
         public async Task<TEntity> GetByIdInclude(object id, params string[] includes)
         {
             IQueryable<TEntity> query = dbSet;
@@ -158,11 +151,16 @@ namespace HouseBroker.Infra.Repository
 
         public virtual void Delete(TEntity entityToDelete)
         {
+            //if (context.Entry(entityToDelete).State == EntityState.Detached)
+            //{
+            //    dbSet.Attach(entityToDelete);
+            //}
             dbSet.Remove(entityToDelete);
         }
 
         public virtual void Update(TEntity entityToUpdate)
         {
+            //dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 

@@ -34,11 +34,14 @@ namespace HouseBroker.Infra.Dtos
 
         public List<PropertyImageDtos> ImageUrl { get; set; }
 
-        [Required]
         public Guid BrokerId { get; set; }
+
+
 
         public DateTime CreatedAt { get; set; }
 
         public bool IsActive { get; set; } = true;
     }
+
+   
 }

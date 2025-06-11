@@ -1,4 +1,5 @@
 ﻿using HouseBroker.Api.Common;
+using HouseBroker.Api.Middleware;
 using HouseBroker.Api.ServiceCollections;
 using HouseBroker.Domain.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +77,12 @@ builder.Services.AddAuthorization(options =>
 // Add your service DI
 builder.Services.AddServiceDI();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
 // JWT Authentication setup
 builder.Services.AddAuthentication(options =>
 {
@@ -118,6 +126,8 @@ app.UseCors("AllowOrigin");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

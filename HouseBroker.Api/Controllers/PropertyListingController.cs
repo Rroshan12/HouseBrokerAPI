@@ -1,4 +1,6 @@
-﻿using HouseBroker.Infra.Dtos;
+﻿using HouseBroker.Domain.Models;
+using HouseBroker.Infra.Dtos;
+using HouseBroker.Infra.Dtos.FilterDtos;
 using HouseBroker.Infra.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +20,10 @@ namespace HouseBroker.Api.Controllers
         // GET: api/PropertyListings
         [HttpGet]
         [Route("GetAllProperty")]
-        [Authorize(Policy = "SeekerOrBroker")]
-        public async Task<ActionResult<List<PropertyListingDtos>>> GetAll()
+        //[Authorize(Policy = "SeekerOrBroker")]
+        public async Task<IActionResult> GetAll([FromQuery]PropertyListingFilter filter)
         {
-            var listings = await _propertyListingService.GetAllListingsAsync();
+            var listings = await _propertyListingService.GetAllListingsAsync(filter);
             return Ok(listings);
         }
 
@@ -29,7 +31,7 @@ namespace HouseBroker.Api.Controllers
         [HttpGet]
         [Route("GetAllPropertyById")]
         [Authorize(Policy = "SeekerOrBroker")]
-        public async Task<ActionResult<PropertyListingDtos>> GetById([FromQuery] Guid id)
+        public async Task<IActionResult> GetById([FromQuery] Guid id)
         {
             var listing = await _propertyListingService.GetListingByIdAsync(id);
             if (listing == null)
@@ -41,8 +43,8 @@ namespace HouseBroker.Api.Controllers
         // POST: api/PropertyListings
         [HttpPost]
         [Route("CreateProperty")]
-        [Authorize(Policy = "BrokerOnly")]
-        public async Task<ActionResult<PropertyListingDtos>> Create([FromBody] PropertyListingDtos dto)
+        //[Authorize(Policy = "BrokerOnly")]
+        public async Task<IActionResult> Create([FromBody] PropertyListingDtos dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -58,10 +60,8 @@ namespace HouseBroker.Api.Controllers
         [HttpPut]
         [Route("UpdateProperty")]
         [Authorize(Policy = "BrokerOnly")]
-        public async Task<ActionResult<PropertyListingDtos>> Update(Guid id, [FromBody] PropertyListingDtos dto)
+        public async Task<IActionResult> Update( [FromBody] PropertyListingDtos dto)
         {
-            if (id != dto.Id)
-                return BadRequest("ID mismatch");
 
             var updated = await _propertyListingService.UpdateListingAsync(dto);
             return Ok(updated);
