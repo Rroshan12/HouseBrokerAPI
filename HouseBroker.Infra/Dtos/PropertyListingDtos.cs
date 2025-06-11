@@ -14,7 +14,7 @@ namespace HouseBroker.Infra.Dtos
     public class PropertyListingDtos
     {
         [Key]
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
@@ -32,9 +32,9 @@ namespace HouseBroker.Infra.Dtos
         [MustContainCommaIfMultipleWords(ErrorMessage = "Features must be a comma-separated list.")]
         public string Features { get; set; }
 
-        public List<PropertyImageDtos> ImageUrl { get; set; }
+        public List<PropertyImageDtos>? ImageUrl { get; set; }
 
-        public Guid BrokerId { get; set; }
+        public Guid? BrokerId { get; set; }
 
 
 

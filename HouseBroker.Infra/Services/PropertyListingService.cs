@@ -136,10 +136,19 @@ namespace HouseBroker.Infra.Services
 
         public async Task<PropertyListingDtos> UpdateListingAsync(PropertyListingDtos listingDto)
         {
-            var entity = Mapper.Convert(listingDto);
-            _unitOfWork.PropertyListingRepository.Update(entity);
-            await _unitOfWork.SaveAsync();
-            return Mapper.Convert(entity);
+            try
+            {
+                var entity = Mapper.Convert(listingDto);
+                    _unitOfWork.PropertyListingRepository.Update(entity);
+               await  _unitOfWork.SaveAsync();
+                return Mapper.Convert(entity);
+
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+          
         }
 
         public async Task<bool> DeleteListingAsync(Guid id)

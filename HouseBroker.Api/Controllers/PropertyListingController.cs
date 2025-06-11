@@ -20,7 +20,7 @@ namespace HouseBroker.Api.Controllers
         // GET: api/PropertyListings
         [HttpGet]
         [Route("GetAllProperty")]
-        [Authorize(Policy = "SeekerOrBroker")]
+        //[Authorize(Policy = "SeekerOrBroker")]
         public async Task<IActionResult> GetAll([FromQuery]PropertyListingFilter filter)
         {
             var listings = await _propertyListingService.GetAllListingsAsync(filter);
@@ -43,7 +43,7 @@ namespace HouseBroker.Api.Controllers
         // POST: api/PropertyListings
         [HttpPost]
         [Route("CreateProperty")]
-        [Authorize(Policy = "BrokerOnly")]
+        //[Authorize(Policy = "BrokerOnly")]
         public async Task<IActionResult> Create([FromBody] PropertyListingDtos dto)
         {
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace HouseBroker.Api.Controllers
         // PUT: api/PropertyListings/{id}
         [HttpPut]
         [Route("UpdateProperty")]
-        [Authorize(Policy = "BrokerOnly")]
+        //[Authorize(Policy = "BrokerOnly")]
         public async Task<IActionResult> Update( [FromBody] PropertyListingDtos dto)
         {
 
@@ -70,7 +70,7 @@ namespace HouseBroker.Api.Controllers
         // DELETE: api/PropertyListings/{id}
         [HttpDelete]
         [Route("DeleteProperty")]
-        [Authorize(Policy = "BrokerOnly")]
+        //[Authorize(Policy = "BrokerOnly")]
         public async Task<IActionResult> Delete([FromQuery] Guid id)
         {
             var success = await _propertyListingService.DeleteListingAsync(id);

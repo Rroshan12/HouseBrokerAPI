@@ -39,7 +39,7 @@ namespace HouseBroker.Infra.Mappers
 
             return new PropertyListing
             {
-                Id =  Guid.NewGuid(),
+                Id =  dto.Id,
                 Title = dto.Title,
                 PropertyType = dto.PropertyType,
                 Location = dto.Location,

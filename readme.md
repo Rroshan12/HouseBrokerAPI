@@ -1,26 +1,28 @@
-Property Listing API
-This project is a property listing platform backend with role-based access for Brokers and Seekers. Brokers can create, update, and delete property listings, while Seekers can only view them. The project uses MSSQL database and includes authentication via JWT tokens.
+Property Listing API Documentation
+Overview
+The Property Listing API is a backend platform for real estate listings with role-based access control. It supports two user roles: Brokers (who can create, update, and delete listings) and Seekers (who can only view listings). The system uses JWT authentication and an MSSQL database.
 
 Setup Instructions
+1. Database Configuration
+Update the connection string in appsettings.json:
 
-
-1. Configure MSSQL Connection String
-Update your database connection string in the configuration file (e.g., appsettings.json) to match your MSSQL server setup:
-
+json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=YOUR_DB_NAME;User Id=YOUR_USERNAME;Password=YOUR_PASSWORD;"
+  "DefaultConnection": "DATA SOURCE=YOUR_SERVER; DATABASE=littledb; Integrated Security=True; TrustServerCertificate=True;"
 }
+2. Database Migrations
+Run these commands to set up the database schema:
 
-2. Apply Database Migrations
-Run the following commands in the Package Manager Console or terminal to set up the database schema:
-
+bash
 add-migration initial
 update-database
+3. Run the Application
+Start the project with:
 
-
-3. Seed Database
-The database will seed default roles and users automatically:
-
+bash
+dotnet run
+4. Default Users
+The system automatically seeds these default accounts:
 
 Broker
 
@@ -34,55 +36,128 @@ Username: seeker1
 
 Password: seeker@123
 
-
-4. Run the Project
-Start the project using your IDE or the command line:
-
-dotnet run
-
-
-API Usage
 Authentication
+Login
+Endpoint: POST /api/Account/Login
 
-Use the /login endpoint to authenticate with username and password.
+Request:
 
-Upon success, you will receive a JWT token.
+json
+{
+  "username": "broker1",
+  "password": "broker@123"
+}
+Response:
+Returns a JWT token to be used in the Authorization header for protected endpoints:
 
-Use this token in the Authorization header for all protected endpoints:
-
+text
 Authorization: Bearer YOUR_TOKEN_HERE
+User Management
+Register Role
+Endpoint: POST /api/Account/RegisterRole
 
+Request:
 
-Roles and Permissions
+json
+{
+  "description": "Broker",
+  "rolePriority": 0
+}
+Register Broker
+Endpoint: POST /api/Account/RegisterHouseBroker
 
-Role	Permissions
-Broker	Create, Read, Update, Delete properties
-Seeker	Read properties only
+Request:
 
-Property Listing Endpoints
-GET /properties
-Retrieve property listings (available for both Broker and Seeker).
+json
+{
+  "username": "string",
+  "password": "string",
+  "email": "string"
+}
+Register Seeker
+Endpoint: POST /api/Account/RegisterHouseSeeker
 
-Supports filters:
+Request:
 
-searchTerm — searches title, location, and property type
+json
+{
+  "username": "string",
+  "password": "string",
+  "email": "string"
+}
+Property Endpoints
+Get All Properties
+Endpoint: GET /api/PropertyListing/GetAllProperty
 
-minPrice — minimum price filter
+Parameters:
 
-maxPrice — maximum price filter
+pageSize (default: 10)
 
-Pagination parameters (page, pageSize)
+pageNumber (default: 1)
 
-POST /properties
-Create a new property listing (Broker only).
+searchTerm (searches title, location, property type)
 
-PUT /properties/{id}
-Update a property listing by ID (Broker only).
+minPrice (minimum price filter)
 
-DELETE /properties/{id}
-Delete a property listing by ID (Broker only).
+maxPrice (maximum price filter)
 
-Property Model Example
+Example:
+
+text
+/api/PropertyListing/GetAllProperty?pageSize=10&pageNumber=1&searchTerm="title"&maxPrice=200&minPrice=100
+Get Property by ID
+Endpoint: GET /api/PropertyListing/GetAllPropertyById
+
+Create Property (Broker only)
+Endpoint: POST /api/PropertyListing/CreateProperty
+
+Request:
+
+json
+{
+  "title": "Sample Property",
+  "propertyType": 1,
+  "location": "New York",
+  "price": 500000,
+  "description": "Beautiful 3-bedroom house",
+  "features": "Pool,Garage,Garden",
+  "imageUrl": [
+    {
+      "url": "https://example.com/image1.jpg"
+    }
+  ],
+  "brokerId": "0FC62E23-6D69-4BC1-8E0E-32B5EC395A12",
+  "createdAt": "2025-06-11T20:57:54.587Z",
+  "isActive": true
+}
+Update Property (Broker only)
+Endpoint: PUT /api/PropertyListing/UpdateProperty
+
+Request:
+
+json
+{
+  "id": "B3163C40-92A6-4DD7-BCC3-9CBFB6834125",
+  "title": "Updated Property Title",
+  "propertyType": 1,
+  "location": "New York",
+  "price": 550000,
+  "description": "Updated description",
+  "features": "Pool,Garage,Garden",
+  "brokerId": "0FC62E23-6D69-4BC1-8E0E-32B5EC395A12",
+  "createdAt": "2025-06-11T21:00:20.293Z",
+  "isActive": true
+}
+Delete Property (Broker only)
+Endpoint: DELETE /api/PropertyListing/DeleteProperty
+
+Parameters:
+
+Pass property listing ID in query string
+
+Data Model
+Property
+json
 {
   "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "title": "string",
@@ -102,13 +177,12 @@ Property Model Example
   "createdAt": "2025-06-11T19:56:39.694Z",
   "isActive": true
 }
-features: Comma-separated values (e.g., "Pool,Gym,Garage").
-
-Search: You can search properties using searchTerm that checks title, location, and property type.
-
 Swagger Documentation
-Swagger UI is enabled for this project to explore and test the API endpoints interactively.
+Interactive API documentation is available at:
 
-Access Swagger at: https://localhost:{PORT}/swagger
-
-Follow the schema and examples to create or update properties.
+text
+https://localhost:{PORT}/swagger
+Role Permissions
+Role	Permissions
+Broker	Create, Read, Update, Delete properties
+Seeker	Read properties only

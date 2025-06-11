@@ -14,7 +14,7 @@ namespace HouseBroker.Domain.Models
     public class PropertyListing
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public PropertyType PropertyType { get; set; } 
         public string Location { get; set; }
@@ -25,13 +25,13 @@ namespace HouseBroker.Domain.Models
         [MustContainCommaIfMultipleWords(ErrorMessage = "Features must be a comma-separated list.")]
         public string Features { get; set; } //add comma separated features
 
-        public Guid BrokerId { get; set; }
-        public ApplicationUser Broker { get; set; }
+        public Guid? BrokerId { get; set; }
+        public ApplicationUser? Broker { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public bool IsActive { get; set; } = true;
-        public ICollection<PropertyImage> Images { get; set; }
+        public ICollection<PropertyImage>? Images { get; set; }
     }
 
 }
