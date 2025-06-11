@@ -1,4 +1,5 @@
-﻿using HouseBroker.Api.Common;
+﻿using HouseBroker.Api;
+using HouseBroker.Api.Common;
 using HouseBroker.Api.Middleware;
 using HouseBroker.Api.ServiceCollections;
 using HouseBroker.Domain.Models;
@@ -109,6 +110,13 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var dbContext = services.GetRequiredService<DbManagerContext>();
+    await DbSeeder.SeedAsync(dbContext);
+}
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

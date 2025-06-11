@@ -20,7 +20,7 @@ namespace HouseBroker.Api.Controllers
         // GET: api/PropertyListings
         [HttpGet]
         [Route("GetAllProperty")]
-        //[Authorize(Policy = "SeekerOrBroker")]
+        [Authorize(Policy = "SeekerOrBroker")]
         public async Task<IActionResult> GetAll([FromQuery]PropertyListingFilter filter)
         {
             var listings = await _propertyListingService.GetAllListingsAsync(filter);
@@ -43,7 +43,7 @@ namespace HouseBroker.Api.Controllers
         // POST: api/PropertyListings
         [HttpPost]
         [Route("CreateProperty")]
-        //[Authorize(Policy = "BrokerOnly")]
+        [Authorize(Policy = "BrokerOnly")]
         public async Task<IActionResult> Create([FromBody] PropertyListingDtos dto)
         {
             if (!ModelState.IsValid)

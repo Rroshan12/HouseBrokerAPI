@@ -35,7 +35,6 @@ namespace HouseBroker.Infra.Services
             _unitOfWork = unitOfWork;
         }
 
-
         public async Task<PagedObject<PropertyListing>> GetAllListingsAsync(PropertyListingFilter filter)
         {
             try
@@ -48,36 +47,36 @@ namespace HouseBroker.Infra.Services
 
                 var searchTerm = filter.SearchTerm?.ToLower();
 
-                // Step 1: Initial DB-side filtering (only SQL-translatable parts)
+                // Match PropertyType enums based on search term (e.g., "apartment" matches PropertyType.Apartment)
+                var matchingPropertyTypes = new List<PropertyType>();
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    matchingPropertyTypes = Enum.GetValues(typeof(PropertyType))
+                        .Cast<PropertyType>()
+                        .Where(e => e.ToString().ToLower().Contains(searchTerm))
+                        .ToList();
+                }
+
+                // SQL-compatible expression
                 Expression<Func<PropertyListing, bool>> dbFilter = p =>
                     (!filter.MinPrice.HasValue || p.Price >= filter.MinPrice.Value) &&
                     (!filter.MaxPrice.HasValue || p.Price <= filter.MaxPrice.Value) &&
                     p.IsActive &&
                     (string.IsNullOrWhiteSpace(searchTerm) ||
                      p.Title.ToLower().Contains(searchTerm) ||
-                     p.Location.ToLower().Contains(searchTerm));
+                     p.Location.ToLower().Contains(searchTerm) ||
+                     matchingPropertyTypes.Contains(p.PropertyType));
 
-                // Step 2: Query from DB
                 var query = _unitOfWork.PropertyListingRepository
-                                       .SelectWhereIncludeQuery(includes, dbFilter)
-                                       .AsEnumerable(); // Switch to in-memory
+                    .SelectWhereIncludeQuery(includes, dbFilter);
 
-                // Step 3: Apply client-side filter on PropertyType.ToString()
-                if (!string.IsNullOrWhiteSpace(searchTerm))
-                {
-                    query = query.Where(p =>
-                        p.PropertyType.ToString().ToLower().Contains(searchTerm) ||
-                        p.Title.ToLower().Contains(searchTerm) ||
-                        p.Location.ToLower().Contains(searchTerm));
-                }
+                var totalRecords = await query.CountAsync();
 
-                // Step 4: Paging
-                var totalRecords = query.Count();
-                var pagedItems = query
+                var pagedItems = await query
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip((filter.PageNumber - 1) * filter.PageSize)
                     .Take(filter.PageSize)
-                    .ToList();
+                    .ToListAsync();
 
                 var totalPages = (int)Math.Ceiling((double)totalRecords / filter.PageSize);
 

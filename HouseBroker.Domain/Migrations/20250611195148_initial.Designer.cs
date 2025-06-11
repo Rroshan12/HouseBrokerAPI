@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HouseBroker.Domain.Migrations
 {
     [DbContext(typeof(DbManagerContext))]
-    [Migration("20250610171318_property-model-and-validation")]
-    partial class propertymodelandvalidation
+    [Migration("20250611195148_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -261,11 +261,7 @@ namespace HouseBroker.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("BrokerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("BrokerId1")
+                    b.Property<Guid>("BrokerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -298,7 +294,7 @@ namespace HouseBroker.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrokerId1");
+                    b.HasIndex("BrokerId");
 
                     b.ToTable("PropertyListing");
                 });
@@ -381,7 +377,7 @@ namespace HouseBroker.Domain.Migrations
                 {
                     b.HasOne("HouseBroker.Domain.Models.Identity.ApplicationUser", "Broker")
                         .WithMany()
-                        .HasForeignKey("BrokerId1")
+                        .HasForeignKey("BrokerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
