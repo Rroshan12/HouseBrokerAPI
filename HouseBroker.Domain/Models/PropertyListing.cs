@@ -25,7 +25,7 @@ namespace HouseBroker.Domain.Models
         [MustContainCommaIfMultipleWords(ErrorMessage = "Features must be a comma-separated list.")]
         public string Features { get; set; } //add comma separated features
 
-        public string BrokerId { get; set; }
+        public Guid BrokerId { get; set; }
         public ApplicationUser Broker { get; set; }
 
         public DateTime CreatedAt { get; set; }

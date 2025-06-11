@@ -13,6 +13,7 @@ namespace HouseBroker.Infra.Repository
     {
         public DbManagerContext _context;
         private bool _disposed = false;
+
         public UnitOfWork(DbManagerContext context)
         {
             _context = context;
@@ -20,6 +21,34 @@ namespace HouseBroker.Infra.Repository
 
     
         public IDbContextTransaction _transaction { get; set; }
+
+        public IPropertyListingRepository _propertyListingRepo;
+        public IPropertyImageRepository _propertyImageRepo;
+
+
+        public IPropertyListingRepository PropertyListingRepository
+        {
+            get
+            {
+                if (_propertyListingRepo == null)
+                {
+                    _propertyListingRepo = new PropertyListingRepository(_context);
+                }
+                return _propertyListingRepo;
+            }
+        }
+
+        public IPropertyImageRepository PropertyImageRepository
+        {
+            get
+            {
+                if (_propertyImageRepo == null)
+                {
+                    _propertyImageRepo = new PropertyImageRepository(_context);
+                }
+                return _propertyImageRepo;
+            }
+        }
 
         public async Task BeginTransactionAsync()
         {

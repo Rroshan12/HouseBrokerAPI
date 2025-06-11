@@ -1,0 +1,17 @@
+﻿using HouseBroker.Domain.Models;
+using HouseBroker.Infra.Interface;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HouseBroker.Infra.Repository
+{
+    public class PropertyListingRepository : Repository<PropertyListing>, IPropertyListingRepository
+    {
+        public PropertyListingRepository(DbManagerContext context) : base(context)
+        {
+        }
+    }
+}

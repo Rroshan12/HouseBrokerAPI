@@ -8,6 +8,8 @@ namespace HouseBroker.Infra.Interface
 {
     public interface IUnitOfWork
     {
+        public IPropertyListingRepository PropertyListingRepository { get; }
+        public IPropertyImageRepository PropertyImageRepository { get; }
         public Task BeginTransactionAsync();
 
         public Task CommitTransactionAsync();
