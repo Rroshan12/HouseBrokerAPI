@@ -21,5 +21,6 @@ namespace HouseBroker.Infra.Dtos
         public int TotalPages { get; }
         public int CurrentPage { get; }
         public int TotalRecords { get; }
+        public IEnumerable<object>? TotalCount { get; set; }
     }
 }
