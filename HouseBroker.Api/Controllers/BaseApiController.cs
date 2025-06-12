@@ -5,7 +5,7 @@ namespace HouseBroker.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class BaseApiController : ControllerBase
     {
 
